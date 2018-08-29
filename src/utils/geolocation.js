@@ -1,4 +1,4 @@
-import { PermissionsAndroid, Geoloca } from 'react-native'
+import { PermissionsAndroid, Platform } from 'react-native'
 
 const defaultGeolocationOptions = {
     enableHighAccuracy: true,
@@ -16,20 +16,32 @@ export const requestPermission = () => {
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     permissionRequestDialog
   )
-    .then(granted => granted === PermissionsAndroid.RESULTS.GRANTED)
+    .then(granted => {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true
+      } else {
+        throw new Error('Geolocation permission denied')
+      }
+    })
 }
 
 export const checkPermission = () => {
   return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-    .then(granted => granted === PermissionsAndroid.RESULTS.GRANTED)
+    .then(granted => {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true
+      } else {
+        throw new Error('Geolocation permission denied')
+      }
+    })
 }
 
 export const getLocation = (options) => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       position => resolve({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
       }),
       error => reject(error),
       {
@@ -38,4 +50,15 @@ export const getLocation = (options) => {
       }
     )
   })
+}
+
+export const fetchLocation = (options) => {
+  if (Platform.OS === 'android') {
+    return checkPermission()
+      .then(() => getLocation(options))
+      .catch(() => requestPermission())
+      .then(() => getLocation(options))
+  } else {
+    return getLocation(options)
+  }
 }
