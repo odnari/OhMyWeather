@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import ui from './ui'
+import location from './location'
 
 const combinedReducers = combineReducers({
-  ui
+  ui,
+  location
 })
 
 export default combinedReducers
