@@ -4,3 +4,5 @@ export const errorMessages = {
     message: 'We need permissions to your location to provide weather information. Please, enable it in Settings.'
   }
 }
+
+export const forecastAgeTimeout = 5000

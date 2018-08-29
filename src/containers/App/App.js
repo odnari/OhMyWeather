@@ -1,27 +1,85 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Text, View, ScrollView } from 'react-native'
+import { Text, View, ScrollView, RefreshControl } from 'react-native'
+import Header from '../../components/Header'
+import { forecastAgeTimeout } from '../../constants'
 import styles from './styles'
-import Header from '../../components/Header/Header'
 
 class App extends Component {
+  state = {
+    loading: false
+  }
+
   componentDidMount() {
     this.props.fetchLocation()
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location.lat !== prevProps.location.lat || this.props.location.lng !== prevProps.location.lng) {
-      this.props.fetchWeather()
+    const { forecastLastUpdate } = this.props
+
+    this.fetchNewForecast(prevProps.location, prevProps.forecastLastUpdate)
+
+    if (forecastLastUpdate !== prevProps.forecastLastUpdate) {
+      this.setState({
+        loading: false
+      })
+    }
+  }
+
+  fetchNewForecast = (oldLocation, oldLastUpdate) => {
+    const { location, fetchWeather } = this.props
+    const isLocationNotSame = this.checkIfSameLocation(oldLocation, location)
+    const isForecastOutdated = this.checkIfForecastOutdated(oldLastUpdate)
+
+    if (isLocationNotSame || isForecastOutdated) {
+      fetchWeather()
+    }
+  }
+
+  checkIfForecastOutdated = (forecastLastUpdate) => {
+    return forecastLastUpdate + forecastAgeTimeout < Date.now()
+  }
+
+  checkIfSameLocation = (oldLocation, newLocation) => {
+    return newLocation.lat !== oldLocation.lat || newLocation.lng !== oldLocation.lng
+  }
+
+  onRefresh = () => {
+    this.setState({
+      loading: true
+    }, this.refreshForecast)
+  }
+
+  refreshForecast = () => {
+    const { forecastLastUpdate, fetchLocation } = this.props
+    const isForecastOutdated = this.checkIfForecastOutdated(forecastLastUpdate)
+
+    if (isForecastOutdated) {
+      fetchLocation()
+    } else {
+      setTimeout(() => {
+        this.setState({
+          loading: false
+        })
+      }, 300)
     }
   }
 
   render() {
-    const { location, forecast, forecastLastUpdate } = this.props
+    const { forecast, forecastLastUpdate } = this.props
+    const { loading } = this.state
 
     return (
       <View style={styles.container}>
         <Header title="Weather at your location"/>
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={this.onRefresh}
+            />
+          }>
           {
             forecast &&
             <Text>
