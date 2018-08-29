@@ -5,15 +5,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F7F7F8',
   },
-  title: {
-    fontSize: 24,
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  content: {
+    flexGrow: 1,
+    padding: 16
+  }
 })
 
 export default styles

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Text, View } from 'react-native'
+import { Text, View, ScrollView } from 'react-native'
 import styles from './styles'
+import Header from '../../components/Header/Header'
 
 class App extends Component {
   componentDidMount() {
@@ -19,17 +20,19 @@ class App extends Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Weather at your location!</Text>
-        {
-          forecast &&
-          <Text>
-            <Text>Temp: {forecast.temperature}</Text>
-            <Text>{'\n'}</Text>
-            <Text>Hum: {forecast.humidity}</Text>
-            <Text>{'\n'}</Text>
-            <Text>Last update: {forecastLastUpdate}</Text>
-          </Text>
-        }
+        <Header title="Weather at your location"/>
+        <ScrollView contentContainerStyle={styles.content}>
+          {
+            forecast &&
+            <Text>
+              <Text>Temp: {forecast.temperature}</Text>
+              <Text>{'\n'}</Text>
+              <Text>Hum: {forecast.humidity}</Text>
+              <Text>{'\n'}</Text>
+              <Text>Last update: {forecastLastUpdate}</Text>
+            </Text>
+          }
+        </ScrollView>
       </View>
     )
   }
