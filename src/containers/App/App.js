@@ -4,6 +4,7 @@ import { Text, View, ScrollView, RefreshControl } from 'react-native'
 import Header from '../../components/Header'
 import { forecastAgeTimeout } from '../../constants'
 import styles from './styles'
+import ForecastItem from '../../components/ForecastItem/ForecastItem'
 
 class App extends Component {
   state = {
@@ -82,13 +83,10 @@ class App extends Component {
           }>
           {
             forecast &&
-            <Text>
-              <Text>Temp: {forecast.temperature}</Text>
-              <Text>{'\n'}</Text>
-              <Text>Hum: {forecast.humidity}</Text>
-              <Text>{'\n'}</Text>
-              <Text>Last update: {forecastLastUpdate}</Text>
-            </Text>
+            <View>
+              <ForecastItem label="Temperature" value={forecast.temperature.toFixed(2)} unit="°C"/>
+              <ForecastItem label="Humidity" value={forecast.humidity.toFixed(2)} unit="%"/>
+            </View>
           }
         </ScrollView>
       </View>
@@ -100,7 +98,7 @@ App.propTypes = {
   fetchLocation: PropTypes.func.isRequired,
   fetchWeather: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  forecast: PropTypes.object.isRequired,
+  forecast: PropTypes.object,
   forecastLastUpdate: PropTypes.number
 }
 

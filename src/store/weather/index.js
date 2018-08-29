@@ -27,7 +27,7 @@ export const fetchWeatherError = (error) => ({
 })
 
 const initialState = {
-  data: {},
+  data: null,
   lastUpdate: null
 }
 

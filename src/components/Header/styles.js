@@ -4,10 +4,6 @@ const ios = Platform.OS === 'ios'
 const statusBarHeight = ios ? 20 : StatusBar.currentHeight
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F7F7F8',
-  },
   header: {
     alignItems: 'center',
     paddingTop: statusBarHeight,
