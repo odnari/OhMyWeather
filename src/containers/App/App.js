@@ -1,56 +1,33 @@
 import React, { Component } from 'react'
-import { fetchLocation } from '../../utils/geolocation'
-import { StyleSheet, Text, View, Alert } from 'react-native'
+import PropTypes from 'prop-types'
+import { Text, View } from 'react-native'
+import styles from './styles'
 
-const errorMessages = {
-  geolocation: {
-    title: 'Geolocation Permissions',
-    message: 'We need permissions to your location to provide weather information. Please, enable it in Settings.'
-  }
-}
-
-export default class App extends Component {
-  state = {
-    location: null,
-    loading: false,
-    error: null
-  }
-
+class App extends Component {
   componentDidMount() {
-    this.setState({
-      loading: true
-    }, this.getLocation)
+    this.props.fetchLocation()
   }
 
-  getLocation = () => {
-    fetchLocation()
-      .then(this.setLocation)
-      .catch(this.locationError)
-  }
-
-  locationError = () => {
-    this.setState({
-      error: true
-    }, () => Alert.alert(errorMessages.geolocation.title, errorMessages.geolocation.message))
-  }
-
-  setLocation = (location) => {
-    this.setState({
-      location,
-      loading: false
-    })
+  componentDidUpdate(prevProps) {
+    if (this.props.location.lat !== prevProps.location.lat || this.props.location.lng !== prevProps.location.lng) {
+      this.props.fetchWeather()
+    }
   }
 
   render() {
+    const { location, forecast, forecastLastUpdate } = this.props
+
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Weather at your location!</Text>
+        <Text style={styles.title}>Weather at your location!</Text>
         {
-          this.state.location &&
+          forecast &&
           <Text>
-            <Text>Lat: {this.state.location.lat}</Text>
+            <Text>Temp: {forecast.temperature}</Text>
             <Text>{'\n'}</Text>
-            <Text>Lng: {this.state.location.lng}</Text>
+            <Text>Hum: {forecast.humidity}</Text>
+            <Text>{'\n'}</Text>
+            <Text>Last update: {forecastLastUpdate}</Text>
           </Text>
         }
       </View>
@@ -58,21 +35,12 @@ export default class App extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-})
+App.propTypes = {
+  fetchLocation: PropTypes.func.isRequired,
+  fetchWeather: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  forecast: PropTypes.object.isRequired,
+  forecastLastUpdate: PropTypes.number
+}
+
+export default App
