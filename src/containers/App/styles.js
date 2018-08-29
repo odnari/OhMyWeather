@@ -7,6 +7,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1
+  },
+  lastUpdate: {
+    padding: 8,
+    alignItems: 'center'
+  },
+  caption: {
+    fontSize: 12,
+    opacity: 0.8,
+    fontWeight: "500"
   }
 })
 

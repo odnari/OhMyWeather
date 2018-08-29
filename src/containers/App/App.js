@@ -12,37 +12,15 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchLocation()
+    this.props.fetchWeather()
   }
 
   componentDidUpdate(prevProps) {
-    const { forecastLastUpdate } = this.props
-
-    this.fetchNewForecast(prevProps.location, prevProps.forecastLastUpdate)
-
-    if (forecastLastUpdate !== prevProps.forecastLastUpdate) {
+    if (this.props.forecastLastUpdate !== prevProps.forecastLastUpdate) {
       this.setState({
         loading: false
       })
     }
-  }
-
-  fetchNewForecast = (oldLocation, oldLastUpdate) => {
-    const { location, fetchWeather } = this.props
-    const isLocationNotSame = this.checkIfSameLocation(oldLocation, location)
-    const isForecastOutdated = this.checkIfForecastOutdated(oldLastUpdate)
-
-    if (isLocationNotSame || isForecastOutdated) {
-      fetchWeather()
-    }
-  }
-
-  checkIfForecastOutdated = (forecastLastUpdate) => {
-    return forecastLastUpdate + forecastAgeTimeout < Date.now()
-  }
-
-  checkIfSameLocation = (oldLocation, newLocation) => {
-    return newLocation.lat !== oldLocation.lat || newLocation.lng !== oldLocation.lng
   }
 
   onRefresh = () => {
@@ -52,11 +30,11 @@ class App extends Component {
   }
 
   refreshForecast = () => {
-    const { forecastLastUpdate, fetchLocation } = this.props
+    const { forecastLastUpdate, fetchWeather } = this.props
     const isForecastOutdated = this.checkIfForecastOutdated(forecastLastUpdate)
 
     if (isForecastOutdated) {
-      fetchLocation()
+      fetchWeather()
     } else {
       setTimeout(() => {
         this.setState({
@@ -64,6 +42,10 @@ class App extends Component {
         })
       }, 300)
     }
+  }
+
+  checkIfForecastOutdated = (forecastLastUpdate) => {
+    return forecastLastUpdate && forecastLastUpdate + forecastAgeTimeout < Date.now()
   }
 
   render() {
@@ -89,6 +71,12 @@ class App extends Component {
             </View>
           }
         </ScrollView>
+        <View style={styles.lastUpdate}>
+          {
+            forecastLastUpdate &&
+            <Text style={styles.caption}>Last update: {(new Date(forecastLastUpdate)).toLocaleString()}</Text>
+          }
+        </View>
       </View>
     )
   }
