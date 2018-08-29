@@ -11,8 +11,8 @@ const getLocation = function* () {
     const position = yield fetchLocation()
     yield put(fetchLocationSuccess(position))
   } catch (err) {
+    yield call(Alert.alert, errorMessages.geolocation.title, err.message)
     yield put(fetchLocationError(err))
-    yield call(Alert.alert, errorMessages.geolocation.title, errorMessages.geolocation.message)
   } finally {
     yield put(setLoading(false))
   }

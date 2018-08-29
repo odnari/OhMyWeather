@@ -7,27 +7,8 @@ import { forecastAgeTimeout } from '../../constants'
 import styles from './styles'
 
 class App extends Component {
-  state = {
-    loading: false
-  }
-
   componentDidMount() {
     this.props.fetchWeather()
-  }
-
-  componentDidUpdate(prevProps) {
-    const isError = prevProps.forecastError !== this.props.forecastError && this.props.forecastError
-    if (this.props.forecastLastUpdate !== prevProps.forecastLastUpdate || isError) {
-      this.setState({
-        loading: false
-      })
-    }
-  }
-
-  onRefresh = () => {
-    this.setState({
-      loading: true
-    }, this.refreshForecast)
   }
 
   refreshForecast = () => {
@@ -36,22 +17,15 @@ class App extends Component {
 
     if (isForecastOutdated) {
       fetchWeather()
-    } else {
-      setTimeout(() => {
-        this.setState({
-          loading: false
-        })
-      }, 300)
     }
   }
 
   checkIfForecastOutdated = (forecastLastUpdate) => {
-    return forecastLastUpdate && forecastLastUpdate + forecastAgeTimeout < Date.now()
+    return !forecastLastUpdate || forecastLastUpdate + forecastAgeTimeout < Date.now()
   }
 
   render() {
-    const { forecast, forecastLastUpdate } = this.props
-    const { loading } = this.state
+    const { forecast, forecastLastUpdate, loading } = this.props
 
     return (
       <View style={styles.container}>
@@ -61,7 +35,7 @@ class App extends Component {
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={this.onRefresh}
+              onRefresh={this.refreshForecast}
             />
           }>
           {
@@ -89,7 +63,8 @@ App.propTypes = {
   location: PropTypes.object.isRequired,
   forecast: PropTypes.object,
   forecastLastUpdate: PropTypes.number,
-  forecastError: PropTypes.object
+  forecastError: PropTypes.object,
+  loading: PropTypes.bool.isRequired
 }
 
 export default App

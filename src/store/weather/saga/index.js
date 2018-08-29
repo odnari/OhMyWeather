@@ -24,8 +24,8 @@ const fetchWeather = function* () {
       humidity: json.main.humidity
     }))
   } catch (err) {
-    yield put(fetchWeatherError(err))
     yield call(Alert.alert, 'Error', err.message)
+    yield put(fetchWeatherError(err))
   } finally {
     yield put(setLoading(false))
   }
