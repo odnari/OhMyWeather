@@ -28,7 +28,7 @@ export const requestPermission = () => {
 export const checkPermission = () => {
   return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
     .then(granted => {
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      if (granted) {
         return true
       } else {
         throw new Error('Geolocation permission denied')
@@ -55,7 +55,6 @@ export const getLocation = (options) => {
 export const fetchLocation = (options) => {
   if (Platform.OS === 'android') {
     return checkPermission()
-      .then(() => getLocation(options))
       .catch(() => requestPermission())
       .then(() => getLocation(options))
   } else {
