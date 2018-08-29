@@ -17,11 +17,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    color: '#fff'
   },
 })
 
