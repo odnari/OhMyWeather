@@ -6,7 +6,8 @@ import Component from './App'
 const mapState = ({ location, weather }) => ({
   location,
   forecast: weather.data,
-  forecastLastUpdate: weather.lastUpdate
+  forecastLastUpdate: weather.lastUpdate,
+  forecastError: weather.error
 })
 
 const mapDispatch = {

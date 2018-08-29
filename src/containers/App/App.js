@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Text, View, ScrollView, RefreshControl } from 'react-native'
 import Header from '../../components/Header'
+import ForecastItem from '../../components/ForecastItem'
 import { forecastAgeTimeout } from '../../constants'
 import styles from './styles'
-import ForecastItem from '../../components/ForecastItem/ForecastItem'
 
 class App extends Component {
   state = {
@@ -16,7 +16,8 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.forecastLastUpdate !== prevProps.forecastLastUpdate) {
+    const isError = prevProps.forecastError !== this.props.forecastError && this.props.forecastError
+    if (this.props.forecastLastUpdate !== prevProps.forecastLastUpdate || isError) {
       this.setState({
         loading: false
       })
@@ -87,7 +88,8 @@ App.propTypes = {
   fetchWeather: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   forecast: PropTypes.object,
-  forecastLastUpdate: PropTypes.number
+  forecastLastUpdate: PropTypes.number,
+  forecastError: PropTypes.object
 }
 
 export default App

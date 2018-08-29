@@ -28,16 +28,28 @@ export const fetchWeatherError = (error) => ({
 
 const initialState = {
   data: null,
-  lastUpdate: null
+  lastUpdate: null,
+  error: null
 }
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case FETCH_WEATHER: {
+      return {
+        ...state,
+        error: null
+      }
+    }
     case FETCH_WEATHER_SUCCESS:
       return {
         ...state,
         data: action.payload,
         lastUpdate: Date.now()
+      }
+    case FETCH_WEATHER_ERROR:
+      return {
+        ...state,
+        error: action.error
       }
     default:
       return state

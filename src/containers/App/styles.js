@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   caption: {
     fontSize: 12,
-    opacity: 0.8,
+    opacity: 0.75,
     fontWeight: "500"
   }
 })

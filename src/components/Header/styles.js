@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: statusBarHeight,
     minHeight: 44,
-    backgroundColor: '#61C2C7'
+    backgroundColor: '#e15245'
   },
   title: {
     fontSize: 24,
