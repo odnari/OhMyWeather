@@ -1,4 +1,4 @@
-package com.ohmyweather;
+package com.nick.ohmyweather;
 
 import com.facebook.react.ReactActivity;
 
