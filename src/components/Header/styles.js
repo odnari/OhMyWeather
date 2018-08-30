@@ -1,7 +1,7 @@
 import { StyleSheet, StatusBar, Platform } from 'react-native'
 
 const ios = Platform.OS === 'ios'
-const statusBarHeight = ios ? 20 : StatusBar.currentHeight
+const statusBarHeight = ios ? 20 : 0
 
 const styles = StyleSheet.create({
   header: {

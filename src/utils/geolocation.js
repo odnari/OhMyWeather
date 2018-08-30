@@ -1,9 +1,8 @@
 import { PermissionsAndroid, Platform } from 'react-native'
 
 const defaultGeolocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 60000,
-    maximumAge: 60 * 60 * 1000
+    enableHighAccuracy: false,
+    timeout: 5000
   }
 
 const permissionRequestDialog = {
