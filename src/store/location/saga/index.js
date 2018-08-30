@@ -3,7 +3,6 @@ import { Alert } from 'react-native'
 import { ACTIONS as LOCATION, fetchLocationError, fetchLocationSuccess } from '../index'
 import { setLoading } from '../../ui'
 import { fetchLocation } from '../../../utils/geolocation'
-import { errorMessages } from '../../../constants'
 
 const getLocation = function* () {
   yield setLoading(true)
@@ -11,7 +10,6 @@ const getLocation = function* () {
     const position = yield fetchLocation()
     yield put(fetchLocationSuccess(position))
   } catch (err) {
-    yield call(Alert.alert, errorMessages.geolocation.title, err.message)
     yield put(fetchLocationError(err))
   } finally {
     yield put(setLoading(false))

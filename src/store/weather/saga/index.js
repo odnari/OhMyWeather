@@ -1,4 +1,4 @@
-import { takeEvery, take, put, all, call, select } from 'redux-saga/effects'
+import { takeEvery, take, put, all, call, select, race } from 'redux-saga/effects'
 import { Alert } from 'react-native'
 import { ACTIONS as WEATHER, fetchWeatherError, fetchWeatherSuccess } from '../index'
 import { ACTIONS as LOCATION, fetchLocation } from '../../location'
@@ -7,10 +7,19 @@ import { endpoints } from '../../../endpoints'
 
 const selectLocation = ({location}) => ({...location})
 
+const fetchLocationAndWeather = function* () {
+  yield put(fetchLocation())
+
+  const {locationSuccess, locationError} = yield race({
+    locationSuccess: take(LOCATION.FETCH_LOCATION_SUCCESS),
+    locationError: take(LOCATION.FETCH_LOCATION_ERROR)
+  })
+
+  yield fetchWeather()
+}
+
 const fetchWeather = function* () {
   yield setLoading(true)
-  yield put(fetchLocation())
-  yield take(LOCATION.FETCH_LOCATION_SUCCESS)
   const location = yield select(selectLocation)
   try {
     const resp = yield fetch(endpoints.openweather.currentWeather.byLatLng(location.lat, location.lng))
@@ -31,13 +40,13 @@ const fetchWeather = function* () {
   }
 }
 
-const watchFetchWeather = function* () {
-  yield takeEvery(WEATHER.FETCH_WEATHER, fetchWeather)
+const watchFetchLocationAndWeather = function* () {
+  yield takeEvery(WEATHER.FETCH_WEATHER, fetchLocationAndWeather)
 }
 
 const rootSaga = function* () {
   yield all([
-    watchFetchWeather()
+    watchFetchLocationAndWeather()
   ])
 }
 
